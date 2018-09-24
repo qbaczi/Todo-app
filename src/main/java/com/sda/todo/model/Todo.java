@@ -1,26 +1,26 @@
-package todo.model;
+package com.sda.todo.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
+
 @Getter
 @Setter
-public class Todo extends TodoUser {
-
+public class Todo {
     private String id;
     private String name;
-    private String descripton;
+    private TodoUser creator;
+    private String description;
     private Instant creationDate;
     private TodoUser owner;
     private TodoStatus todoStatus;
 
-    public Todo(String name, Instant creationDate) {
-
+    public Todo(String name, TodoUser creator) {
         this.name = name;
-        this.creationDate = creationDate;
-        this.descripton = "";
+        this.creator = creator;
+        this.description = "";
         this.creationDate = Instant.now();
         this.owner = null;
         this.todoStatus = TodoStatus.New;

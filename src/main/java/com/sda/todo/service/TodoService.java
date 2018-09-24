@@ -1,21 +1,17 @@
-package todo.service;
+package com.sda.todo.service;
 
+import com.sda.todo.model.Todo;
+import com.sda.todo.model.TodoUser;
+import com.sda.todo.model.exception.InvalidPasswordException;
+import com.sda.todo.model.exception.TodoUserAlreadyExistsException;
+import com.sda.todo.repository.TodoRepository;
+import com.sda.todo.repository.TodoUserRepository;
 import lombok.AllArgsConstructor;
-import todo.model.Todo;
-import todo.model.TodoUser;
-import todo.model.exception.InvalidPasswordException;
-import todo.model.exception.TodoUserAlreadyExistsException;
-import todo.repository.TodoRepository;
-import todo.repository.TodoUserRepository;
-
-import java.time.Instant;
 
 @AllArgsConstructor
 public class TodoService {
-
     private TodoRepository todoRepository;
     private TodoUserRepository todoUserRepository;
-
 
     public void save(Todo todo) {
         todoRepository.save(todo);
@@ -28,14 +24,12 @@ public class TodoService {
         TodoUser user = new TodoUser(name, password);
         todoUserRepository.save(user);
         return user;
-
     }
 
-    public Instant login(String name, String password) {
+    public TodoUser login(String name, String password) {
         if (!todoUserRepository.exists(name)) {
-            throw new TodoUserAlreadyExistsException("User wit name" + name + " already exists");
+            throw new TodoUserAlreadyExistsException("User with name " + name + " already exists");
         }
-
         TodoUser user = todoUserRepository.findByName(name);
         if (!user.getPassword().equals(password)) {
             throw new InvalidPasswordException("Invalid password");

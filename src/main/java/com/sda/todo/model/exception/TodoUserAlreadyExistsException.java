@@ -1,4 +1,4 @@
-package todo.model.exception;
+package com.sda.todo.model.exception;
 
 public class TodoUserAlreadyExistsException extends TodoException {
 

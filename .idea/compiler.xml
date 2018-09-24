@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="java11pozprogsreZaa" />
+        <module name="javapoz11-programowanie-sredniozaawansowane" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="javapoz11-programowanie-sredniozaawansowane" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

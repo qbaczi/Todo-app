@@ -1,12 +1,11 @@
-package todo.repository;
+package com.sda.todo.repository;
 
-import todo.model.Todo;
+import com.sda.todo.model.Todo;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TodoRepository {
-
     void save(Todo todo);
 
     Optional<Todo> findById(String id);
