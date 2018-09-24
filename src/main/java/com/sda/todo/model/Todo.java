@@ -9,6 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Todo {
+
     private String id;
     private String name;
     private TodoUser creator;
