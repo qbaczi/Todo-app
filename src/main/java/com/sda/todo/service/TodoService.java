@@ -8,8 +8,11 @@ import com.sda.todo.repository.TodoRepository;
 import com.sda.todo.repository.TodoUserRepository;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 public class TodoService {
+
     private TodoRepository todoRepository;
     private TodoUserRepository todoUserRepository;
 
@@ -36,4 +39,10 @@ public class TodoService {
         }
         return user;
     }
+
+    public List<Todo> findAllTodo() {
+        return todoRepository.findAll();
+    }
+
+
 }

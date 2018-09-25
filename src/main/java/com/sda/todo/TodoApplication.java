@@ -49,7 +49,7 @@ public class TodoApplication {
                     addNewTodo();
                     break;
                 case 4:
-
+                    showTodo();
                     break;
                 default:
                     todoConsoleView.exit();
@@ -59,6 +59,10 @@ public class TodoApplication {
         } while (flagExit);
     }
 
+    private void showTodo() {
+        Integer option = todoConsoleView.showTodoListWithOption(todoService.findAllTodo());
+        System.out.println("Wybrano opcje" + option);
+    }
 
     private void register() {
         String name = todoConsoleView.registerName();
@@ -70,7 +74,6 @@ public class TodoApplication {
         } else {
             todoConsoleView.displaySuccess("User registered");
         }
-
     }
 
     private void login() {
@@ -92,12 +95,14 @@ public class TodoApplication {
         if (currentUser == null) {
             login();
         }
+        if (currentUser != null) {
 
-        String todoName = todoConsoleView.createNewTodoName();
-        String todoDescription = todoConsoleView.createNewTodoDescription();
-        Todo todo = new Todo(todoName, this.currentUser);
-        todo.setDescription(todoDescription);
+            String todoName = todoConsoleView.createNewTodoName();
+            String todoDescription = todoConsoleView.createNewTodoDescription();
+            Todo todo = new Todo(todoName, this.currentUser);
+            todo.setDescription(todoDescription);
 
-        todoService.save(todo);
+            todoService.save(todo);
+        }
     }
 }
