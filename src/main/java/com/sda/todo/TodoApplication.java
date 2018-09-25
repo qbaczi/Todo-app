@@ -24,9 +24,7 @@ public class TodoApplication {
 
     public static void main(String[] args) {
         TodoRepository todoRepository = new InMemoryTodoRepository();
-        TodoUserRepository todoUserRepository = new InMemoryTodoUserRepository(
-                Arrays.asList(new TodoUser("Szymon", "blabla"))
-        );
+        TodoUserRepository todoUserRepository = new InMemoryTodoUserRepository();
         TodoService todoService = new TodoService(todoRepository, todoUserRepository);
 
         Scanner scanner = new Scanner(System.in);
@@ -37,6 +35,7 @@ public class TodoApplication {
     }
 
     public void start() {
+        boolean flagExit = true;
         do {
             Integer menuOption = todoConsoleView.menu();
             switch (menuOption) {
@@ -44,7 +43,7 @@ public class TodoApplication {
                     login();
                     break;
                 case 2:
-
+                    register();
                     break;
                 case 3:
                     addNewTodo();
@@ -53,9 +52,25 @@ public class TodoApplication {
 
                     break;
                 default:
+                    todoConsoleView.exit();
+                    flagExit = false;
                     break;
             }
-        } while (true);
+        } while (flagExit);
+    }
+
+
+    private void register() {
+        String name = todoConsoleView.registerName();
+        String password = todoConsoleView.registerPassword();
+        TodoUser user = todoService.register(name, password);
+
+        if (user == null) {
+            todoConsoleView.displayError("User already exist");
+        } else {
+            todoConsoleView.displaySuccess("User registered");
+        }
+
     }
 
     private void login() {
@@ -66,6 +81,10 @@ public class TodoApplication {
             this.currentUser = todoService.login(name, password);
         } catch (TodoUserDoesNotExistsException | InvalidPasswordException e) {
             todoConsoleView.displayError(e.getMessage());
+        }
+
+        if (this.currentUser != null) {
+            todoConsoleView.displaySuccess("User log in");
         }
     }
 
