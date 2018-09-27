@@ -69,7 +69,20 @@ public class TodoApplication {
             case 2:
                 removeTodo(possibleId);
                 break;
+            case 3:
+                assign(possibleId, currentUser);
+                break;
         }
+    }
+
+    private void assign(String possibleId, TodoUser currentUser) {
+        Integer todoId = extractTodoId(possibleId);
+        Optional<Todo> todo = todoService.findTodoById(todoId);
+        if (todo.isPresent()) {
+            Todo todoToChangeAssignment = todo.get();
+            todoToChangeAssignment.setOwner(currentUser);
+        }
+        todoConsoleView.displayAssignment(todo, currentUser);
     }
 
     private void removeTodo(String possibleId) {
