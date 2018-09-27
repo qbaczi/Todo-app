@@ -9,6 +9,7 @@ import com.sda.todo.repository.TodoUserRepository;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class TodoService {
@@ -44,5 +45,15 @@ public class TodoService {
         return todoRepository.findAll();
     }
 
+    public Optional<Todo> findTodoById(Integer todoId) {
+        return todoRepository.findById(todoId);
+    }
 
+    public Optional<Todo> removeTodo(Integer todoId) {
+        Optional<Todo> todo = findTodoById(todoId);
+        if (todo.isPresent()) {
+            todoRepository.remove(todoId);
+        }
+        return todo;
+    }
 }

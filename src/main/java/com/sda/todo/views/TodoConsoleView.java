@@ -7,6 +7,7 @@ import com.sda.todo.model.TodoUser;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class TodoConsoleView {
     private Scanner scanner;
@@ -58,6 +59,13 @@ public class TodoConsoleView {
         return scanner.nextLine();
     }
 
+    public Integer getTodoId() {
+        System.out.println("Podaj numer zadania");
+        int todoId = scanner.nextInt();
+        scanner.nextLine();
+        return todoId;
+    }
+
     public void displayError(String message){
 
         System.out.println("Error");
@@ -102,9 +110,41 @@ public class TodoConsoleView {
         System.out.println("0. Wyjdz");
 
         Integer option = scanner.nextInt();
-        scanner.nextLine();
-
 
         return option;
+    }
+
+    public void showTodoWithDetails(Optional<Todo> todo) {
+        String message = todo.map(e -> {
+            TodoUser creator = e.getCreator();
+            Optional<TodoUser> owner = Optional.ofNullable(e.getOwner());
+            return e.getName() + " (" + e.getTodoStatus().toString() + ") (" + e.getCreationDate().toString() + ")\n" +
+                    e.getDescription() + "\n" +
+                    "Tworca: " + creator.getName() + "\n" +
+                    "Przypisane: " + owner.orElse(TodoUser.unasigned()).getName();
+        }).orElse("Zadanie nie istnieje");
+
+        System.out.println(message);
+    }
+
+    private Integer askForIdToRemove() {
+        System.out.println("Podaj ID zadania");
+        int toDoId = scanner.nextInt();
+        scanner.nextLine();
+        return toDoId;
+    }
+
+    public String getPossibleId() {
+        String possibleId = scanner.nextLine();
+        if (possibleId.length() > 0) {
+            return possibleId.substring(1);
+        } else {
+            return possibleId;
+        }
+    }
+
+    public void displayTodoRemove(Optional<Todo> removedTodo) {
+        System.out.println(removedTodo.map(e -> "Usunieto zadania " + e.getName()).orElse("Zadanie nie istnieje"));
+
     }
 }

@@ -12,7 +12,7 @@ import com.sda.todo.service.TodoService;
 import com.sda.todo.views.TodoConsoleView;
 import lombok.AllArgsConstructor;
 
-import java.util.Arrays;
+import java.util.Optional;
 import java.util.Scanner;
 
 @AllArgsConstructor
@@ -49,7 +49,7 @@ public class TodoApplication {
                     addNewTodo();
                     break;
                 case 4:
-                    showTodo();
+                    listTodoList();
                     break;
                 default:
                     todoConsoleView.exit();
@@ -59,9 +59,41 @@ public class TodoApplication {
         } while (flagExit);
     }
 
-    private void showTodo() {
+    private void listTodoList() {
         Integer option = todoConsoleView.showTodoListWithOption(todoService.findAllTodo());
-        System.out.println("Wybrano opcje" + option);
+        String possibleId = todoConsoleView.getPossibleId();
+        switch (option) {
+            case 1:
+                showTodo(possibleId);
+                break;
+            case 2:
+                removeTodo(possibleId);
+                break;
+        }
+    }
+
+    private void removeTodo(String possibleId) {
+        Integer todoId = extractTodoId(possibleId);
+
+        Optional<Todo> removedTodo = todoService.removeTodo(todoId);
+        todoConsoleView.displayTodoRemove(removedTodo);
+
+    }
+
+    private Integer extractTodoId(String possibleId) {
+        Integer todoId;
+        if (possibleId.length() == 0) {
+            todoId = todoConsoleView.getTodoId()-1;
+        } else {
+            todoId = Integer.valueOf(possibleId)-1;
+        }
+        return todoId;
+    }
+
+    private void showTodo(String possibleId) {
+        Integer todoId = extractTodoId(possibleId);
+        Optional<Todo> todo = todoService.findTodoById(todoId);
+        todoConsoleView.showTodoWithDetails(todo);
     }
 
     private void register() {

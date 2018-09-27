@@ -1,19 +1,18 @@
 package com.sda;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class Application {
     public static void main(String[] args) {
-        String name = null;
-        int age = 5;
-        if (age > 10) {
-            name = "bla bla";
-        }
-        System.out.println(countWords(name, " "));
-    }
+        List<String> texts = Arrays.asList("Ala", null, "ma", "kota", null, "abc");
 
-    private static int countWords(String text, String separator) {
-        return Optional.ofNullable(text).orElseGet(() -> "")
-                .split(separator).length;
+        for (String text : texts) {
+            Optional<String> optional = Optional.ofNullable(text);
+
+            optional.filter(e -> e.length()>2)
+                    .orElse("Stop");
+        }
     }
 }
