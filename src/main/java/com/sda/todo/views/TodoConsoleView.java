@@ -88,7 +88,7 @@ public class TodoConsoleView {
     }
 
     public Integer showTodoListWithOption(List<Todo> allTodo) {
-        System.out.println("***Lista zadań***");
+        System.out.println("***Lista Zadań***");
         System.out.println("******************");
         for (int i = 0; i < allTodo.size(); i++) {
             Todo todo = allTodo.get(i);
@@ -102,7 +102,7 @@ public class TodoConsoleView {
                     "\" |" + todoStatus.toString().toUpperCase());
 
         }
-        System.out.println("*****************************************");
+        System.out.println("**************************");
         System.out.println("1. Wyświetl");
         System.out.println("2. Usuń");
         System.out.println("3. Przypisz");
@@ -149,6 +149,18 @@ public class TodoConsoleView {
 
     public void displayAssignment(Optional<Todo> todo, TodoUser currentUser) {
         todo.map(e -> "Przypisano " + currentUser.getName() + " do zadania \"" + e.getName() + "\"").orElse("Zadanie nie istnieje!");
+
+    }
+
+    public void displayChangeStatus(Optional<Todo> todo) {
+        System.out.println(todo.map(e -> "Zmieniono status zadania " + e.getName() + " na " + e.getTodoStatus()).orElse("Zadanie nie istnieje"));
+
+    }
+
+    public TodoStatus getStatus() {
+        System.out.println("Podaj status (New, Active, Closed)");
+        String status = scanner.nextLine();
+        return TodoStatus.valueOf(status);
 
     }
 }

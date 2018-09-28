@@ -1,6 +1,8 @@
 package com.sda.todo;
 
+import com.sda.todo.model.Command;
 import com.sda.todo.model.Todo;
+import com.sda.todo.model.TodoStatus;
 import com.sda.todo.model.TodoUser;
 import com.sda.todo.model.exception.InvalidPasswordException;
 import com.sda.todo.model.exception.TodoUserDoesNotExistsException;
@@ -61,39 +63,72 @@ public class TodoApplication {
 
     private void listTodoList() {
         Integer option = todoConsoleView.showTodoListWithOption(todoService.findAllTodo());
-        String possibleId = todoConsoleView.getPossibleId();
+        Command command = new Command(option);
+
         switch (option) {
             case 1:
-                showTodo(possibleId);
+                String possibleId = todoConsoleView.getPossibleId();
+                Integer todoId = extractTodoId(possibleId);
+                command.addArgument("todoId", todoId);
+                showTodo(command);
                 break;
             case 2:
-                removeTodo(possibleId);
+                String possibleIdToRemove = todoConsoleView.getPossibleId();
+                Integer todoIdToRemove = extractTodoId(possibleIdToRemove);
+                command.addArgument("todoId", todoIdToRemove);
+                removeTodo(command);
                 break;
             case 3:
-                assign(possibleId, currentUser);
+                String possibleIdToAssign = todoConsoleView.getPossibleId();
+                Integer todoIdToAssign = extractTodoId(possibleIdToAssign);
+                command.addArgument("todoId", todoIdToAssign);
+                command.addArgument("user", currentUser);
+                assign(command);
+                break;
+            case 4:
+                String possibleIdToChangeStatus = todoConsoleView.getPossibleId();
+                Integer todoIdToChangeStatus = extractTodoId(possibleIdToChangeStatus);
+                TodoStatus status = todoConsoleView.getStatus();
+                command.addArgument("todoId", todoIdToChangeStatus);
+                command.addArgument("status", status);
+                changeStatus(command);
                 break;
         }
     }
 
-    private void assign(String possibleId, TodoUser currentUser) {
-        Integer todoId = extractTodoId(possibleId);
+    private void changeStatus(Command command) {
+        Integer todoId = (Integer) command.getArgument("todoId");
+        TodoStatus status = (TodoStatus) command.getArgument("status");
+        Optional<Todo> todo = todoService.findTodoById(todoId);
+        if (todo.isPresent()) {
+            Todo todoToChangeStatus = todo.get();
+            todoToChangeStatus.setTodoStatus(status);
+        }
+        todoConsoleView.displayChangeStatus(todo);
+    }
+
+    private void assign(Command command) {
+
+        Integer todoId = (Integer) command.getArgument("todoId");
+        TodoUser user = (TodoUser) command.getArgument("user");
         Optional<Todo> todo = todoService.findTodoById(todoId);
         if (todo.isPresent()) {
             Todo todoToChangeAssignment = todo.get();
-            todoToChangeAssignment.setOwner(currentUser);
+            todoToChangeAssignment.setOwner(user);
         }
-        todoConsoleView.displayAssignment(todo, currentUser);
+        todoConsoleView.displayAssignment(todo, user);
     }
 
-    private void removeTodo(String possibleId) {
-        Integer todoId = extractTodoId(possibleId);
+    private void removeTodo(Command command) {
 
+        Integer todoId = (Integer) command.getArgument("todoId");
         Optional<Todo> removedTodo = todoService.removeTodo(todoId);
         todoConsoleView.displayTodoRemove(removedTodo);
 
     }
 
     private Integer extractTodoId(String possibleId) {
+
         Integer todoId;
         if (possibleId.length() == 0) {
             todoId = todoConsoleView.getTodoId()-1;
@@ -103,13 +138,16 @@ public class TodoApplication {
         return todoId;
     }
 
-    private void showTodo(String possibleId) {
-        Integer todoId = extractTodoId(possibleId);
+    private void showTodo(Command command) {
+
+        Integer todoId = (Integer) command.getArgument("todoId");
         Optional<Todo> todo = todoService.findTodoById(todoId);
         todoConsoleView.showTodoWithDetails(todo);
     }
 
+
     private void register() {
+
         String name = todoConsoleView.registerName();
         String password = todoConsoleView.registerPassword();
         TodoUser user = todoService.register(name, password);
