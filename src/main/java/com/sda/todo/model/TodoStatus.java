@@ -1,5 +1,5 @@
 package com.sda.todo.model;
 
 public enum TodoStatus {
-    New, Active, Closed;
+    New, Active, Closed
 }

@@ -127,12 +127,12 @@ public class TodoConsoleView {
         System.out.println(message);
     }
 
-    private Integer askForIdToRemove() {
-        System.out.println("Podaj ID zadania");
-        int toDoId = scanner.nextInt();
-        scanner.nextLine();
-        return toDoId;
-    }
+//    private Integer askForIdToRemove() {
+//        System.out.println("Podaj ID zadania");
+//        int toDoId = scanner.nextInt();
+//        scanner.nextLine();
+//        return toDoId;
+//    }
 
     public String getPossibleId() {
         String possibleId = scanner.nextLine();
